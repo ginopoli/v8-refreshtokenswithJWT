@@ -287,8 +287,24 @@ namespace TodoApp.Controllers
             }
             catch(Exception ex)
             {
-                return null;
-            }
+                if(ex.Message.Contains("Lifetime validation failed. The token is expired.")) {
+
+                      return new AuthResult() {
+                        Success = false,
+                        Errors = new List<string>() {
+                            "Token has expired please re-login"
+                        }
+                    };
+                
+                } else {
+                      return new AuthResult() {
+                        Success = false,
+                        Errors = new List<string>() {
+                            "Something went wrong."
+                        }
+                    };
+                }
+            }    
         }
 
         private DateTime UnixTimeStampToDateTime(long unixTimeStamp)
