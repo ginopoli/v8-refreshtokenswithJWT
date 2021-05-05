@@ -201,7 +201,17 @@ namespace TodoApp.Controllers
             try
             {   
                 // Validation 1 - Validation JWT token format
-                var tokenInVerification = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParams, out var validatedToken);
+                var tokenInVerification = jwtTokenHandler.ValidateToken(tokenRequest.Token,
+                    //_tokenValidationParams, 
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuer = _tokenValidationParams.ValidateIssuer,
+                        ValidateAudience = _tokenValidationParams.ValidateAudience,
+                        ValidateIssuerSigningKey = _tokenValidationParams.ValidateIssuerSigningKey,
+                        IssuerSigningKey = _tokenValidationParams.IssuerSigningKey,
+                        ValidateLifetime = false
+                    },
+                    out var validatedToken);
 
                 // Validation 2 - Validate encryption alg
                 if(validatedToken is JwtSecurityToken jwtSecurityToken)
